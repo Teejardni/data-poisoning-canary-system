@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
+from app.core.settings import settings
 
-
-app = FastAPI()
+app = FastAPI(title=settings.app_name)
 
 @app.get("/health")
 async def health_check():

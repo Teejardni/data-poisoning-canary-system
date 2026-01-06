@@ -9,6 +9,7 @@ services:
       - MINIO_ENDPOINT=minio:9000
     depends_on:
       - minio
+      - redis
     networks:
       - canary-network
   minio:
@@ -45,6 +46,20 @@ services:
       timeout: 5s
       retries: 5
 
+  celery:
+    build: .
+    command: >
+      /app/.venv/bin/celery
+      -A app.worker.celery_worker
+      worker
+      --loglevel=INFO
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - minio
+    networks:
+      - canary-network
 
 networks:
   canary-network:
